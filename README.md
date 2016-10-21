@@ -7,12 +7,12 @@ with npm installed.
 
 In order to run the app you need to install dependencies with:
 
-  bower install
-  npm install
+    bower install
+    npm install
 
 Now you can run the server:
 
-  ember serve
+    ember serve
 
 And open http://localhost:4200 in the browser.
 
@@ -71,7 +71,7 @@ You can also start an interactive test runner for easier development:
 
     ember test --serve
 
-  ### Feature Flags
+### Feature Flags
 
 `travis-web` is beginning the transition to use feature flags wherever it makes
 sense. To enable/disable/add/remove a feature flag for the application, you can
