@@ -42,7 +42,7 @@ test('user can cancel if she has pull permissions to a repo and job is cancelabl
   assert.ok(!component.get('canCancel'));
   component.set('userHasPullPermissionForRepo', true);
   assert.ok(!component.get('canCancel'));
-  assert.job.set('canCancel', true);
+  job.set('canCancel', true);
   assert.ok(component.get('canCancel'));
 });
 
