@@ -42,3 +42,15 @@ test('gravatarImage', function (assert) {
   const size = 'large';
   assert.equal(service.gravatarImage(email, size), 'https://www.gravatar.com/avatar/7e04deb54e09fefd971875250cf6b415?s=large&d=blank');
 });
+
+test('travisWebBranch', function (assert) {
+  const service = this.subject();
+  const branchName = 'bd-no-justice-no-peace';
+
+  assert.equal(service.travisWebBranch(branchName), 'https://github.com/travis-ci/travis-web/tree/bd-no-justice-no-peace');
+});
+
+test('githubBranch', function (assert) {
+  let service = this.subject();
+  assert.equal(service.githubBranch(this.slug, this.branch), 'https://github.com/travis-ci/travis-web/tree/new-pr');
+});
