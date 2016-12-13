@@ -1,5 +1,9 @@
 ## Travis CI ember web client
 [![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
+
+### Gustavo's observation
+In this repo, as of Dec. 16 you may find tests using dummy strings making fun of feminism. I do not condone that. For repo diff's sakes, I am keeping that for the time being. The original repo does not open issues to people outside the core team at the moment.
+
 ### Running the app
 
 The app is developed using [Ember CLI](http://ember-cli.com). It requires nodejs
