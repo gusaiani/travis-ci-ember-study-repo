@@ -65,6 +65,5 @@ test('the owner page shows their repositories', (assert) => {
 
     assert.equal(ownerPage.repos(1).name, 'willful-subjects');
     assert.equal(ownerPage.repos(1).noBuildMessage, 'There is no build on the default branch yet.');
-
-  })
+  });
 });
