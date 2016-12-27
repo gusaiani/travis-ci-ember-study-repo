@@ -1,0 +1,78 @@
+{{#travis-layout layoutName="layouts/landing-page"}}
+<div id="landing" class="landing">
+  <div class="row hero z-1">
+    <section class="landing-centered-wrapper">
+      <div class="large-12 columns" id="hero-copy">
+  <h1>Test and Deploy with Confidence</h1>
+  <p>Easily sync your GitHub projects with Travis CI<br class="mobile-break"> and you’ll be testing your code in minutes!</p>
+
+  {{#if auth.signedOut}}
+      <button {{action "signIn" target=auth}} class="hero-button org">
+                {{inline-svg 'sign-in-mascot' class=""}} <span class="label-align">Sign Up</span></button>
+  {{/if}}
+  {{#if auth.signingIn}}
+    <button class="hero-button org">
+            <span class="loading-indicator--white"><i></i><i></i><i></i></span>
+            <span class="label-align">Signing In</span></button>
+  {{/if}}
+
+      </div>
+      <div class="large-12 columns laptop-wrapper">
+  <div id="laptop">
+    <img src="../images/landing-page/laptop.png" alt="Travis CI screenshot">
+  </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="row oss-testing">
+    <section class="landing-centered-wrapper">
+      <div class="large-12 columns">
+  <h2>The home of<br class="mobile-break"> open source testing</h2>
+        <p>Over 300k open source projects<br class="mobile-break"> and 235k users are testing on Travis CI.</p>
+        {{inline-svg 'customer-numbers' class="os-numbers"}}
+      </div>
+    </section>
+  </div>
+
+  <div class="row customers">
+    <div class="landing-centered-wrapper">
+      <div class="medium-6 columns">
+  <img src="../images/landing-page/customers-temp-together.svg" alt="customer logos">
+      </div>
+      <div class="medium-6 columns">
+  <p class="left">Some pretty awesome companies<br> and projects are using us.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row free-for-oss">
+    <section class="landing-centered-wrapper">
+      <div class="large-12 columns">
+  <h1>Testing your open source<br class="mobile-no-break"> project is 10000% free</h1>
+  <p><span class="bold-italic">Seriously. Always.</span> We like to think of it as our way of giving<br>back to a community that gives us so much as well.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="row private-repos">
+    <section class="landing-centered-wrapper">
+      <div class="medium-6 columns mobile-envelope">
+  <img src="../images/landing-page/envelope.svg">
+      </div>
+
+      <div class="medium-6 columns">
+  <div class="landing-vert-center-s">
+    <h2>Have a private project<br>you’d like to test?</h2>
+    <p>Travis CI for private repositories has<br><a href="http://travis-ci.com/plans" target="_blank">plans</a> for every size project.</p>
+  </div>
+      </div>
+      <div class="medium-6 columns desktop-envelope">
+        {{inline-svg 'envelope'}}
+      </div>
+    </section>
+  </div>
+
+
+</div>
+{{/travis-layout}}
