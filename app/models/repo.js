@@ -170,3 +170,92 @@ const Repo = Model.extend({
     }, {});
   }
 });
+
+Repo.reopenClass({
+  recent() {
+    return this.find();
+  },
+
+  accessibleBy(store, reposIdsOrlogin) {
+    var promise, repos, reposIds;
+    reposIds = reposIdsOrlogin;
+    repos = store.filter('repo', function (repo) {
+      let repoId = parseInt(repo.get('id'));
+      return reposIds.includes(repoId);
+    });
+    promise = new Ember.RSVP.Promise(function (resolve, reject) {
+      return store.query('repo', {
+        'repository.active': 'true',
+        sort_by: 'current_build:desc',
+        limit: 30
+      }).then(function () {
+        return resolve(repos);
+      }, function () {
+        return reject();
+      });
+    });
+    return promise;
+  },
+
+  search(store, ajax, query) {
+    var promise, queryString, result;
+    queryString = Ember.$.param({
+      search: query,
+      orderBy: 'name',
+      limit: 5
+    });
+    promise = ajax.ajax('/repos?' + queryString, 'get');
+    result = Ember.ArrayProxy.create({
+      content: []
+    });
+    return promise.then(function (data) {
+      let promises = data.repos.map(function (repoData) {
+        return store.findRecord('repo', repoData.id).then(function (record) {
+          result.pushObject(record);
+          result.set('isLoaded', true);
+          return record;
+        });
+      });
+      return Ember.RSVP.allSettled(promises).then(function () {
+        return result;
+      });
+    });
+  },
+
+  fetchBySlug(store, slug) {
+    var adapter, modelClass, promise, repos;
+    repos = store.peekAll('repo').filterBy('slug', slug);
+    if (repos.get('length') > 0) {
+      return repos.get('firstObject');
+    } else {
+      promise = null;
+      adapter = store.adapterFor('repo');
+      modelClass = store.modelFor('repo');
+      promise = adapter.findRecord(store, modelClass, slug).then(function (payload) {
+        var i, len, record, ref, repo, result, serializer;
+        serializer = store.serializerFor('repo');
+        modelClass = store.modelFor('repo');
+        result = serializer.normalizeResponse(store, modelClass, payload, null, 'findRecord');
+        repo = store.push({
+          data: result.data
+        });
+        ref = result.included;
+        for (i = 0, len = ref.length; i < len; i++) {
+          record = ref[i];
+          store.push({
+            data: record
+          });
+        }
+        return repo;
+      });
+      return promise['catch'](function () {
+        var error;
+        error = new Error('repo not found');
+        error.slug = slug;
+        throw error;
+      });
+    }
+  }
+});
+
+export default Repo;
