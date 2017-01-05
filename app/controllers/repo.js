@@ -18,7 +18,7 @@ export default Ember.Controller.extend({
   repos: alias('reposController.repos'),
   currentUser: alias('auth.currentUser'),
 
-  className: ['repo'],
+  classNames: ['repo'],
 
   build: Ember.computed.alias('buildController.build'),
   builds: Ember.computed.alias('buildsController.content'),
@@ -69,7 +69,7 @@ export default Ember.Controller.extend({
     let updateTimesService = this.get('updateTimesService');
 
     updateTimesService.push(this.get('build'));
-    updateTimesService.push(this.get('build'));
+    updateTimesService.push(this.get('builds'));
     updateTimesService.push(this.get('build.jobs'));
   },
 
@@ -120,5 +120,46 @@ export default Ember.Controller.extend({
     return this.connectTab('caches');
   },
 
+  viewRequest() {
+    return this.connectTab('request');
+  },
 
+  viewSettings() {
+    return this.connectTab('settings');
+  },
+
+  currentBuildDidChange() {
+    return Ember.run.scheduleOnce('actions', this, this._currentBuildDidChange);
+  },
+
+  _currentBuildDidChange() {
+    let currentBuild = this.get('repo.currentBuild');
+    if (currentBuild && currentBuild.get('id')) {
+      eventually(currentBuild, (build) => {
+        this.set('build', build);
+
+        if (build.get('jobs.length') === 1) {
+          this.set('job', build.get('jobs.firstObject'));
+        }
+      });
+    }
+  },
+
+  stopObservingLastBuild() {
+    return this.removeObserver('repo.currentBuild', this, 'currentBuildDidChange');
+  },
+
+  observeLastBuild() {
+    this.currentBuildDidChange();
+    return this.addObserver('repo.currentBuild', this, 'currentBuildDidChange');
+  },
+
+  connectTab(tab) {
+    tab === 'current' ? 'build' : tab;
+    return this.set('tab', tab);
+  },
+
+  urlGithub: Ember.computed('repo.slug', function () {
+    return this.get('externalLinks').githubRepo(this.get('repo.slug'));
+  })
 });
