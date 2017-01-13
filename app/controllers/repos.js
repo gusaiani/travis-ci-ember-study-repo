@@ -17,7 +17,7 @@ var sortCallback = function (repo1, repo2) {
 
   if (!buildId1 && !buildId2) {
     // if both repos lack builds, put newer repo first
-    return repo1.get('id') > repo2.get('id') ? -1
+    return repo1.get('id') > repo2.get('id') ? -1 : 1;
   } else if (buildId1 && !buildId2) {
     // if only repo1 has a build, it goes first
     return -1;
@@ -220,4 +220,43 @@ export default Ember.Controller.extend({
     this.get('performSearchRequest').perform(query);
   },
 
+  noReposMessage: Ember.computed('tab', function () {
+    var tab;
+    tab = this.get('tab');
+    if (tab === 'owned') {
+      return 'You don\'t have any repos set up on Travis CI';
+    } else if (tab === 'recent') {
+      return 'Repositories could not be loaded';
+    } else {
+      return 'Could not find any repos';
+    }
+  }),
+
+  showRunningJobs: Ember.computed('tab', function () {
+    return this.get('tab') === 'running';
+  }),
+
+  repos: Ember.computed(
+    '_repos.[]',
+    '_repos.@each.currentBuildFinishedAt',
+    '_repos.@each.currentBuildId',
+    function () {
+      var repos = this.get('_repos');
+
+      if (repos && repos.toArray) {
+        repos = repos.toArray();
+      }
+
+      if (repos && repos.sort) {
+        let sorted = repos.sort(sortCallback);
+        return sorted;
+      } else {
+        if (Ember.isArray(repos)) {
+          return repos;
+        } else {
+          return [];
+        }
+      }
+    }
+  )
 });
